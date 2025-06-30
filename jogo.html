@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hackeie a Indiferença - Jogo da Memória</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      margin: 0; padding: 20px;
+      text-align: center;
+    }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    #timer { font-size: 24px; margin-top: 10px; font-weight: bold; color: #00796b; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 120px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .card {
+      background: white;
+      border: 2px solid #00796b;
+      height: 120px;
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 5px;
+      overflow: hidden;
+      user-select: none;
+      position: relative;
+      border-radius: 8px;
+      perspective: 600px;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .front, .back {
+      position: absolute;
+      width: 100%; height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+    .front {
+      background: #270137;
+      color: white;
+    }
+    .back {
+      background: white;
+      color: #333;
+      transform: rotateY(180deg);
+      flex-direction: column;
+    }
+    .back img {
+      max-width: 80px;
+      max-height: 80px;
+      margin-bottom: 5px;
+    }
+    button {
+      margin-top: 20px;
+      background: #4c0395;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #29026df6;
+    }
+    #ranking-list {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0;
+  list-style: none;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+  overflow: hidden;
+  border: 2px solid #7c3aed;
+}
+
+#ranking-list li {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9f9ff;
+  font-weight: 500;
+  color: #4c1d95;
+}
+
+#ranking-list li:last-child {
+  border-bottom: none;
+}
+
+h3 {
+  color: #6d28d9;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#ranking-list {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0;
+  list-style: none;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+  overflow: hidden;
+  border: 2px solid #7c3aed;
+}
+
+#ranking-list li {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9f9ff;
+  font-weight: 500;
+  color: #4c1d95;
+}
+
+#ranking-list li:last-child {
+  border-bottom: none;
+}
+
+h3 {
+  color: #6d28d9;
+  font-size: 24px;
+  font-weight: bold;
+}
+#limpar-ranking-btn {
+  background: #ec4899;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#limpar-ranking-btn:hover {
+  background: #db2777;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="start-screen" class="screen active">
+  <h1>"Consciência em Cartas: Toque, Lembre, Respeite"</h1>
+  <p>Digite seu nome para começar:</p>
+  <input type="text" id="player-name" placeholder="Seu nome" />
+  <br />
+  <button id="start-btn" disabled>Começar Jogo</button>
+</div>
+
+<div id="game-screen" class="screen">
+  <h2>Jogo da Memória</h2>
+  <div id="timer">Tempo: 03:00 </div>
+  <div class="card-grid" id="card-grid"></div>
+</div>
+
+<div id="end-screen" class="screen">
+  <h2>Parabéns, <span id="player-display"></span>!</h2>
+  <p>Você terminou o jogo.</p>
+  <p>Tempo usado: <span id="time-used"></span></p>
+  <p>Cartas acertadas: <span id="score"></span></p>
+  <h3>Ranking Local</h3>
+<ul id="ranking-list"></ul>
+<div>
+  <button id="atualizar-ranking-btn">🔄 Carregar Participantes</button>
+  <button id="limpar-ranking-btn" style="display: none;">🧹 Limpar Ranking</button>
+</div>
+<button id="restart-btn">Jogar Novamente</button>
+</div>
+
+
+<script>
+  const cardsData = [
+    { text: 'Ouvir é um ato de amor', img: 'img/ouvir.png' },
+    { text: 'Direito à moradia digna', img: 'img/moradia.png' },
+    { text: 'Respeitar é valorizar', img: 'img/valorizar.png' },
+    { text: 'Idosos também sonham', img: 'img/sonham.png' },
+    { text: 'Sabedoria que ensina', img: 'img/sabedoria.png' },
+    { text: 'Cuide de quem cuidou', img: 'img/cuidar.png' },
+    { text: 'Amor e empatia sempre', img: 'img/empatia.png' },
+    { text: 'Respeito é para todos', img: 'img/respeito.png' },
+    { text: 'Acolhimento importa', img: 'img/acolher.png' },
+    { text: 'Dignidade não tem idade', img: 'img/dignidade.png' }
+  ];
+
+  let playerName = "";
+  let timerInterval;
+  let timeLeft = 180;
+  let flippedCards = [];
+  let matchedCount = 0;
+
+  const startScreen = document.getElementById('start-screen');
+  const gameScreen = document.getElementById('game-screen');
+  const endScreen = document.getElementById('end-screen');
+  const startBtn = document.getElementById('start-btn');
+  const playerInput = document.getElementById('player-name');
+  const timerEl = document.getElementById('timer');
+  const cardGrid = document.getElementById('card-grid');
+  const playerDisplay = document.getElementById('player-display');
+  const timeUsedEl = document.getElementById('time-used');
+  const scoreEl = document.getElementById('score');
+  const rankingBtn = document.getElementById('rankingBtn');
+  const rankingScreen = document.getElementById('rankingScreen');
+  const limparRankingBtn = document.getElementById('limpar-ranking-btn');
+  const rankingList = document.getElementById('ranking-list');
+  const restartBtn = document.getElementById('restart-btn');
+
+  playerInput.addEventListener('input', () => {
+    startBtn.disabled = playerInput.value.trim() === "";
+  });
+
+  startBtn.addEventListener('click', () => {
+    playerName = playerInput.value.trim();
+    if (!playerName) return;
+    startScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+    startGame();
+  });
+
+  restartBtn.addEventListener('click', () => {
+    location.reload();
+  });
+
+  function startGame() {
+    timeLeft = 90;
+    matchedCount = 0;
+    flippedCards = [];
+    updateTimer();
+    createCards();
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        endGame(false);
+      }
+    }, 1000);
+  }
+
+  function updateTimer() {
+    let min = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    let sec = (timeLeft % 60).toString().padStart(2, '0');
+    timerEl.textContent = `Tempo: ${min}:${sec}`;
+  }
+
+  function createCards() {
+    cardGrid.innerHTML = "";
+    const cards = cardsData.flatMap((card, i) => ([
+      { id: i, type: 'text', content: card.text },
+      { id: i, type: 'img', content: card.img }
+    ]));
+    shuffle(cards);
+    cards.forEach(card => {
+      const cardEl = document.createElement('div');
+      cardEl.classList.add('card');
+      cardEl.dataset.id = card.id;
+      cardEl.dataset.type = card.type;
+
+      const inner = document.createElement('div');
+      inner.classList.add('card-inner');
+
+      const front = document.createElement('div');
+      front.classList.add('front');
+      front.textContent = "?";
+
+      const back = document.createElement('div');
+      back.classList.add('back');
+      if (card.type === 'text') {
+        back.textContent = card.content;
+      } else {
+        const img = document.createElement('img');
+        img.src = card.content;
+        img.alt = "Imagem relacionada";
+        back.appendChild(img);
+      }
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      cardEl.appendChild(inner);
+
+      cardEl.addEventListener('click', () => flipCard(cardEl));
+      cardGrid.appendChild(cardEl);
+    });
+  }
+
+  function flipCard(card) {
+    if (flippedCards.length === 2 || flippedCards.includes(card) || card.classList.contains('matched')) return;
+    card.classList.add('flipped');
+    flippedCards.push(card);
+
+    if (flippedCards.length === 2) {
+      const [c1, c2] = flippedCards;
+      if (c1.dataset.id === c2.dataset.id && c1.dataset.type !== c2.dataset.type) {
+        c1.classList.add('matched');
+        c2.classList.add('matched');
+        matchedCount++;
+        flippedCards = [];
+        if (matchedCount === cardsData.length) {
+          clearInterval(timerInterval);
+          endGame(true);
+        }
+      } else {
+        setTimeout(() => {
+          c1.classList.remove('flipped');
+          c2.classList.remove('flipped');
+          flippedCards = [];
+        }, 1000);
+      }
+    }
+  }
+
+  function endGame(won) {
+    gameScreen.classList.remove('active');
+    endScreen.classList.add('active');
+    playerDisplay.textContent = playerName;
+    scoreEl.textContent = matchedCount;
+    timeUsedEl.textContent = formatTime(180 - timeLeft);
+    saveRanking(playerName, matchedCount, 180 - timeLeft);
+    showRanking();
+  }
+
+  function formatTime(seconds) {
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+    return `${min}m ${sec}s`;
+  }
+
+  function saveRanking(name, score, time) {
+    const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+    ranking.push({ name, score, time });
+    ranking.sort((a, b) => b.score - a.score || a.time - b.time);
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+  }
+
+function showRanking() {
+  rankingList.innerHTML = "";
+  const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+  ranking.slice(0, 10).forEach((entry, i) => {
+    const li = document.createElement('li');
+    li.textContent = `${i + 1}. ${entry.name} - Acertos: ${entry.score} - Tempo: ${formatTime(entry.time)}`;
+    rankingList.appendChild(li);
+  });
+
+  // Mostra ou esconde o botão com base no conteúdo
+  limparRankingBtn.style.display = ranking.length > 0 ? 'inline-block' : 'none';
+}
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+        function clearRanking() {
+      if (confirm("Tem certeza que deseja limpar todo o ranking?")) {
+        firebase.database().ref("jogadores").remove();
+      }
+    }
+    limparRankingBtn.addEventListener('click', clearRanking);
+
+function clearRanking() {
+  if (confirm("Tem certeza que deseja apagar o ranking?")) {
+    localStorage.removeItem('ranking');
+    rankingList.innerHTML = "";
+    limparRankingBtn.style.display = 'none';
+  }
+}
+
+// Mostra o ranking ao carregar a tela final
+function showRanking() {
+  rankingList.innerHTML = "";
+  const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+  ranking.slice(0, 20).forEach((entry, i) => {
+    const li = document.createElement('li');
+    li.textContent = `${i + 1}. ${entry.name} - Acertos: ${entry.score} - Tempo: ${formatTime(entry.time)}`;
+    rankingList.appendChild(li);
+  });
+  limparRankingBtn.style.display = ranking.length > 0 ? 'inline-block' : 'none';
+}
+
+// Evento para atualizar o ranking manualmente
+document.getElementById('atualizar-ranking-btn').addEventListener('click', showRanking);
+
+// Já chama ao carregar tela final
+document.addEventListener('DOMContentLoaded', showRanking);
+  }
+</script>
+</body>
+</html>

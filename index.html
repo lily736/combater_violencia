@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conscientização da Violência contra a Pessoa Idosa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 30px 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    h1, h2, h3 {
+      color: #5a2a83;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    .info-box {
+      background: #eee;
+      padding: 20px;
+      border-left: 6px solid #5a2a83;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .button-area {
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #5a2a83;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45206c;
+    }
+
+    .video-container {
+      margin-top: 40px;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 100%;
+      height: 315px;
+      margin-bottom: 30px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .quiz-button {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .quiz-button button {
+      padding: 15px 35px;
+      font-size: 18px;
+    }
+
+    .section {
+      margin-top: 40px;
+    }
+
+    ul {
+      margin-left: 20px;
+    }
+
+    blockquote {
+      font-style: italic;
+      color: #555;
+      margin: 15px 0;
+      border-left: 4px solid #ccc;
+      padding-left: 15px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dia Mundial da Conscientização da Violência contra a Pessoa Idosa</h1>
+    <p>
+      Celebrado em <strong>15 de junho</strong>, este dia tem como objetivo mobilizar a sociedade para combater todos os tipos de violência contra a pessoa idosa. É um chamado à ação pelo respeito, empatia e pela valorização da vida.
+    </p>
+
+    <div class="info-box" id="infoBox">
+      <p>
+        O Dia foi instituído pela <strong>Organização das Nações Unidas (ONU)</strong> e pela <strong>Rede Internacional de Prevenção à Violência contra a Pessoa Idosa</strong>, reforçando a importância de políticas públicas e ações de conscientização.
+      </p>
+    </div>
+
+    <div class="button-area">
+      <button onclick="nextInfo()">Próxima Informação</button>
+    </div>
+
+    <div class="section">
+      <h2>💡 Sobre o Tema</h2>
+      <ul>
+        <li><strong>Respeito intergeracional:</strong> Incentivar o diálogo e a escuta entre gerações fortalece os laços sociais.</li>
+        <li><strong>Prevenção:</strong> Identificar sinais de violência é o primeiro passo para ajudar.</li>
+        <li><strong>Direitos:</strong> A Constituição Federal assegura à pessoa idosa o direito à vida, à saúde, ao respeito e à dignidade.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>❤️ Valorização e Convivência com a Pessoa Idosa</h2>
+      <ul>
+        <li>🔸 Ouvir suas histórias é reconhecer sua sabedoria.</li>
+        <li>🔸 Respeitar seu tempo, seus gostos e limitações é sinal de empatia.</li>
+        <li>🔸 Incentive a autonomia e o convívio social sempre que possível.</li>
+        <li>🔸 Atitudes simples como conversar ou caminhar juntos fazem toda a diferença.</li>
+      </ul>
+    </div>
+
+    <div class="section video-container">
+      <h2>📺 Vídeos Educativos</h2>
+
+      <h3>Violência contra a Pessoa Idosa</h3>
+      <iframe src="https://www.youtube.com/embed/dve2Si54LdI" title="Violência contra a Pessoa Idosa" allowfullscreen></iframe>
+
+      <h3>Campanha de Conscientização</h3>
+      <iframe src="https://www.youtube.com/embed/6XwXHF8TJeI" title="Campanha de Conscientização" allowfullscreen></iframe>
+
+      <h3>Junho Violeta 💜 | Assim você me vê?</h3>
+      <iframe src="https://www.youtube.com/embed/fTkDUm1HBIk" title="Junho Violeta - Assim você me vê?" allowfullscreen></iframe>
+    </div>
+
+    <div class="section">
+      <h2>📖 Conheça alguns direitos do Estatuto do Idoso</h2>
+      <ul>
+        <li><strong>Transporte público gratuito</strong> para maiores de 65 anos.</li>
+        <li><strong>Prioridade no atendimento</strong> em serviços públicos e privados.</li>
+        <li><strong>Medicamentos gratuitos</strong> para doenças crônicas na rede pública.</li>
+        <li><strong>Proteção contra negligência, discriminação e violência.</strong></li>
+        <li><strong>Direito à moradia digna</strong>, à saúde e à alimentação.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>💬 Frases para Refletir</h2>
+      <blockquote>“A velhice não é um naufrágio, é um porto de sabedoria.”</blockquote>
+      <blockquote>“Todo jovem um dia será idoso. O respeito é um compromisso com o nosso próprio futuro.”</blockquote>
+      <blockquote>“Ser idoso é ter vivido histórias que ainda podem ensinar muito.”</blockquote>
+    </div>
+
+    <div class="section">
+      <h2>🧠 Curiosidades</h2>
+      <ul>
+        <li>O Brasil terá mais idosos do que jovens até 2030, segundo o IBGE.</li>
+        <li>O cérebro continua capaz de aprender coisas novas mesmo após os 70 anos.</li>
+        <li>Pessoas idosas ativas socialmente tendem a viver mais e com melhor qualidade de vida.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📞 Como Denunciar</h2>
+      <p>
+        Em caso de suspeita ou confirmação de maus-tratos contra pessoas idosas, denuncie:
+      </p>
+      <ul>
+        <li><strong>Disque 100</strong> – Central de Direitos Humanos (anônimo e gratuito)</li>
+        <li>Delegacias de Polícia Civil ou Especializadas</li>
+        <li>Ministério Público ou Defensorias Públicas</li>
+        <li>Conselhos Municipais do Idoso</li>
+      </ul>
+    </div>
+
+    <div class="quiz-button">
+      <button onclick="window.location.href='jogo.html'">🎮 Ir para o Jogo Educativo</button>
+    </div>
+  </div>
+
+  <script>
+    const infos = [
+      "O objetivo é <strong>chamar atenção</strong> para os abusos e maus-tratos contra os idosos, promovendo a conscientização da sociedade sobre o respeito e a dignidade que todos merecem.",
+      "👊 Tipos de violência: física, psicológica, financeira, negligência e institucional. Muitas vezes ocorrem silenciosamente dentro do ambiente familiar.",
+      "A maioria dos casos acontece <strong>dentro de casa</strong>, praticados por familiares, o que torna a denúncia ainda mais difícil e urgente.",
+      "📞 Denuncie pelo <strong>Disque 100</strong>. Atendimento anônimo e gratuito.",
+      "<em>Respeitar o idoso é respeitar o próprio futuro.</em>"
+    ];
+
+    let index = 0;
+    function nextInfo() {
+      const box = document.getElementById("infoBox");
+      index++;
+      if (index < infos.length) {
+        box.innerHTML = `<p>${infos[index]}</p>`;
+      } else {
+        box.innerHTML = "<p><strong>Contionue a seguir para mais informações!</strong></p>";
+        document.querySelector("button").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
